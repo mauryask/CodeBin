@@ -23,17 +23,26 @@ class Solution {
         
         if(sMap.size() != tMap.size())
             return 0;
+        
         if(sMap.equals(tMap))
             return 1;
         
         int sMin = Integer.MAX_VALUE;
-        int tMin = Integer.MAX_VALUE;
+        int tMin = Integer.MAX_VALUE;        
         
-        for(Integer value : sMap.values())
-            sMin = Math.min(sMin, value);
+        for(Map.Entry<Character, Integer> map : tMap.entrySet())
+		{
+			char ch = map.getKey();
+			int val = map.getValue();
+			
+            tMin = Math.min(tMin, val); 
+			
+			if(sMap.get(ch) < val)
+				return 0;
+			else
+				sMin = Math.min(sMin, sMap.get(ch));
+		}
         
-        for(Integer value : tMap.values())
-            tMin = Math.min(tMin, value); 
         
         return sMin/tMin;
     }
