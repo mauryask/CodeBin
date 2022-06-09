@@ -1,9 +1,10 @@
 import static java.lang.System.*;
+import static java.nio.file.StandardCopyOption.*;
 import java.util.*;
 import java.text.*;
 import java.io.*;
 import java.nio.file.*;
-import static java.nio.file.StandardCopyOption.*;
+import java.time.*; 
 
 public class DBDump 
 {
@@ -11,7 +12,8 @@ public class DBDump
 	{
 		 //Check if today is monday
 		 Calendar cal = Calendar.getInstance();
-		 boolean isMonday = cal.get(Calendar.DAY_OF_WEEK) == Calendar.WEDNESDAY;
+		 boolean isMonday = 
+		 cal.get(Calendar.DAY_OF_WEEK) == Calendar.THURSDAY;
 		 
 		 //Check if it is 11:00 AM
 		 Date date = new Date();
@@ -19,15 +21,21 @@ public class DBDump
 		 boolean isTime = 
 		 dateFormat
 		 .parse(dateFormat.format(date))
-		 .equals(dateFormat.parse("23:36"));
+		 .equals(dateFormat.parse("22:27"));
 		 
 		 if(isMonday && isTime)
 		 {
-			 out.println("Creating database dump...");
+			 dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");  	         			  			
+			 out.println("Date: "+LocalDate.now().getDayOfWeek().name()+", "+dateFormat.format(date));	
+			 out.println("Creating database dump..");
 			 createDumpFile();			 
-			 out.println("Database dump created successfully...");
-			 out.println("Copying dump to USB...");
+			 out.println("Database dump created successfully..");
+			 out.println("Copying dump to USB..");
 			 copyDumpToUSB();
+			 out.println("----------------------");
+			 //Give the delay of 2 minutes
+			 //to preven to create sump multiple times
+			 Thread.sleep(120000);
 		 } 
  	}
 	
@@ -49,12 +57,15 @@ public class DBDump
 	
 	static void copyDumpToUSB() throws IOException
 	{
+		//Source path
 		File src = new File("C:\\Users\\Shubham Maurya\\Desktop\\DB Dump\\sample.sql");
-        File dest = new File("H:\\dump\\sample.sql");
+        //Destination path (USB)
+		File dest = new File("H:\\dump\\sample.sql");
+		//Copy dump file
         Path temp = Files.copy(src.toPath(), dest.toPath(), REPLACE_EXISTING);
        
 	    if(temp != null)
-			out.println("Dump copied successfully...");
+			out.println("Dump copied successfully..");
 		else
 			out.println("Failed to copy the dump!!");
 	}
@@ -62,7 +73,10 @@ public class DBDump
 	public static void main(String [] args)
 	{
 		try{
-		    dumpDB();			
+			out.println("Hi, There..");
+			//Run an infinite loop to keep the program alive
+		    while(true)
+				dumpDB();			
 		}
 		catch(Exception ex){ex.printStackTrace();}		
 	}
